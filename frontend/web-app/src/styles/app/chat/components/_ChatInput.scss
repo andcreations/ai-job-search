@@ -1,0 +1,48 @@
+.aijs-chat-input {
+  width: 100%;
+  height: $aijs-chat-input-height;
+  position: fixed;
+  bottom: 0;
+  background-color: #101214;
+}
+
+.aijs-chat-input-border {
+  width: 100%;
+  height: 1px;
+  background-color: $gray-900;
+}
+
+.aijs-chat-input-content-container {
+  width: 100%;
+  height: 100%;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.aijs-chat-input-content {
+  @include aijs-flex-container();
+  @include aijs-flex-horizontal();
+  @include aijs-flex-center();
+  background-color: $gray-900;
+  border-radius: 1rem;
+  margin: 1rem auto;
+  max-width: $aijs-page-desktop-width;  
+}
+
+.aijs-chat-input-control {
+  flex-grow: 1;
+  border: none;
+  border-radius: 0;
+  background-color: transparent;
+  margin: 0 0.5rem;
+
+  &:focus {
+    outline: none;
+    background-color: transparent;
+    box-shadow: none;
+  }
+
+  .form-control {
+    width: unset;
+  }
+}

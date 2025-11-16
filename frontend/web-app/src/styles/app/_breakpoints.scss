@@ -1,0 +1,18 @@
+$aijs-breakpoints: (
+  sm: 780px,
+  md: 1024px,
+  lg: 1440px
+);
+
+@mixin aijs-breakpoint-min($name) {
+  @media (min-width: map-get($aijs-breakpoints, $name)) {
+    @content
+  }
+};
+
+@mixin aijs-breakpoint-max($name) {
+  @media (max-width: map-get($aijs-breakpoints, $name)) {
+    @content
+  }
+};
+

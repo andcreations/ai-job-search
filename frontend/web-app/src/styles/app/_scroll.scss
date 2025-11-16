@@ -1,0 +1,26 @@
+.aijs-scroll {
+  overflow-y: scroll;
+}
+
+/* scrollbar */
+.aijs-scroll::-webkit-scrollbar {
+  width: 0.625rem;
+}
+
+/* track */
+.aijs-scroll::-webkit-scrollbar-track {
+  background: $gray-900;
+  border-radius: 0.625rem;
+}
+
+/* thumb (drag) */
+.aijs-scroll::-webkit-scrollbar-thumb {
+  background: $gray-800;
+  border-radius: 0.625rem;
+  border: 0.125rem solid $gray-900;
+}
+
+/* thumb on hover */
+.aijs-scroll::-webkit-scrollbar-thumb:hover {
+  background: $gray-700;
+}

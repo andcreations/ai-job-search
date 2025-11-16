@@ -1,0 +1,14 @@
+if [ -n "$BASH_VERSION" ]; then
+  # bash
+  SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]}")"
+elif [ -n "$ZSH_VERSION" ]; then
+  # zsh
+  SCRIPT_PATH="$(cd "$(dirname "${(%):-%x}")" && pwd)/$(basename "${(%):-%x}")"
+else
+  echo "Unsupported shell. Please use bash or zsh."
+  exit 1
+fi
+SCRIPT_DIR="$(dirname "$SCRIPT_PATH")"
+
+export JWT_SECRET="owRz8QogIYkN79Sw6WpTqJ@a"
+export MEALZ_WEB_APP_DIR="$SCRIPT_DIR/../../frontend/web-app/dist/app"

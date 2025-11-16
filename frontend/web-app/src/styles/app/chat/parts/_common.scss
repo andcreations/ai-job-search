@@ -1,0 +1,37 @@
+@mixin aijs-chat-part() {
+  margin: 0.5rem;
+}
+
+.aijs-user-chat-part {
+  @include aijs-flex-container();
+  @include aijs-flex-horizontal();
+  justify-content: flex-end;
+  align-items: flex-end;
+  @include aijs-chat-part();
+  margin-top: 3rem;
+  margin-bottom: 1rem;
+}
+
+.aijs-user-chat-part-space {
+  flex-grow: 1;
+  flex-shrink: 0;
+}
+
+.aijs-user-chat-part-content {
+  flex-grow: 0;
+  flex-shrink: 1;
+}
+
+.aijs-model-chat-part {
+  @include aijs-flex-container();
+  @include aijs-flex-horizontal();
+  justify-content: flex-start;
+  align-items: flex-start;
+  @include aijs-chat-part();
+  margin: 1rem auto;
+}
+
+.aijs-model-chat-part-content {
+  flex-grow: 1;
+  flex-shrink: 0;
+}

@@ -1,0 +1,9 @@
+.aijs-full-screen {
+  width: 100dvw;
+  height: 100dvh;
+}
+
+.aijs-full-screen-center {
+  @include aijs-flex-container();
+  @include aijs-flex-center();
+}

@@ -1,0 +1,16 @@
+@mixin aijs-flex-container() {
+  display: flex;
+}
+
+@mixin aijs-flex-center() {
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin aijs-flex-horizontal() {
+  flex-direction: row;
+}
+
+@mixin aijs-flex-vertical() {
+  flex-direction: column;
+}

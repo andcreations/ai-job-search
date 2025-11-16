@@ -1,0 +1,54 @@
+import * as React from 'react';
+import { useRef } from 'react';
+import Form from 'react-bootstrap/Form';
+
+import { isEnterKey } from '../../utils';
+import { useTranslations } from '../../hooks';
+import { ChatInputTranslations } from './ChatInput.translations';
+
+export interface ChatInputProps {
+  text: string;
+  hasChatParts: boolean;
+  onTextChange: (text: string) => void;
+  onTextEnter: () => void;
+}
+
+export function ChatInput(props: ChatInputProps) {
+  const translate = useTranslations(ChatInputTranslations);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    props.onTextChange(event.target.value);
+  };
+
+  const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (isEnterKey(event)) {
+      event.preventDefault();
+      if (inputRef.current) {
+        inputRef.current.blur();
+      }
+      props.onTextEnter();
+    }
+  };
+
+  return (
+    <div className='aijs-chat-input'>
+      { props.hasChatParts &&
+        <div className='aijs-chat-input-border'/>
+      }
+      <div className='aijs-chat-input-content-container'>
+        <div className='aijs-chat-input-content'>
+          <Form.Control
+            ref={inputRef}
+            className='aijs-chat-input-control'
+            type='text'
+            value={props.text}
+            placeholder={translate('placeholder')}
+            onChange={onChange}
+            onKeyDown={onKeyDown}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}

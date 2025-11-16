@@ -1,0 +1,4 @@
+.aijs-center {
+  @include aijs-flex-container();
+  @include aijs-flex-center();
+}

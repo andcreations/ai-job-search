@@ -1,0 +1,35 @@
+body {
+  background-color: #101214;
+  // min-height: 100vh;
+  // font-family: "Inter", sans-serif;
+  // font-weight: 300;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+a, a:hover {
+  color: $blue-300;
+}
+
+a, a:visited {
+  text-decoration: none;
+}
+
+// No spin buttons (arrow up/down)
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  // Chrome, Safari, Edge, Opera
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  // Firefox
+  -moz-appearance: textfield;
+}
+
+.form-control::placeholder {
+  color: $gray-600;
+}

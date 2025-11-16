@@ -1,0 +1,15 @@
+.aijs-sign-in-form {
+  .aijs-sign-in-form-control {
+    margin-top: 0.875rem;
+    margin-bottom: 0.875rem;
+  }
+
+  .aijs-sign-in-form-button {
+    margin-top: 0.875rem;
+  }
+
+  .aijs-sign-in-form-status {
+    margin-top: 0.875rem;
+    @include aijs-font-small();
+  }
+}
