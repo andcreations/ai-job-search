@@ -8,12 +8,14 @@ import {
 
 import { CorrelationIdMiddleware } from './middlewares';
 import { getServeStaticModule } from './web';
+import { UsersDBModule } from '../users/db';
 import { AuthModule } from '../auth';
 import { AgentModule } from '../agent';
 
 @Module({
   imports: [
     getServeStaticModule(),
+    UsersDBModule,
     AuthModule,
     AgentModule,
   ],

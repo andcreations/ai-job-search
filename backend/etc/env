@@ -11,4 +11,5 @@ fi
 SCRIPT_DIR="$(dirname "$SCRIPT_PATH")"
 
 export JWT_SECRET="owRz8QogIYkN79Sw6WpTqJ@a"
-export MEALZ_WEB_APP_DIR="$SCRIPT_DIR/../../frontend/web-app/dist/app"
+export AI_JOB_SEARCH_WEB_APP_DIR="$SCRIPT_DIR/../../frontend/web-app/dist/app"
+export SQLITE_DB_DIR="$SCRIPT_DIR/../_db"

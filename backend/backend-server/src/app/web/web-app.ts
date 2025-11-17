@@ -11,7 +11,7 @@ let staticFilesDir: string;
 
 function getStaticFilesDir(): string {
   if (!staticFilesDir) {
-    staticFilesDir = path.normalize(requireStrEnv('MEALZ_WEB_APP_DIR'));
+    staticFilesDir = path.normalize(requireStrEnv('AI_JOB_SEARCH_WEB_APP_DIR'));
     getLogger().info('Static files directory', {
       ...BOOTSTRAP_CONTEXT,
       dir: staticFilesDir,

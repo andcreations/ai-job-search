@@ -3,4 +3,5 @@
 **/yalc.lock
 **/.yalc
 **/.DS_Store
+backend/_db/**
 NOTES.md

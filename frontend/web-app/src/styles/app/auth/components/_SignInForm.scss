@@ -9,6 +9,7 @@
   }
 
   .aijs-sign-in-form-status {
+    color: $danger;
     margin-top: 0.875rem;
     @include aijs-font-small();
   }
