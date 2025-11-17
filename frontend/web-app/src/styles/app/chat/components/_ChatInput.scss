@@ -6,6 +6,10 @@
   background-color: #101214;
 }
 
+.aijs-chat-input-without-output {
+  top: calc(50% - $aijs-chat-input-height / 2);
+}
+
 .aijs-chat-input-border {
   width: 100%;
   height: 1px;
@@ -16,7 +20,8 @@
   width: 100%;
   height: 100%;
   padding-left: 1rem;
-  padding-right: 1rem;
+  // add the scroll width, so that the chat output and input are aligned horizontally
+  padding-right: calc(1rem + $aijs-scroll-width);
 }
 
 .aijs-chat-input-content {

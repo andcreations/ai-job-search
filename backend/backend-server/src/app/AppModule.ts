@@ -6,14 +6,16 @@ import {
   Type,
 } from '@nestjs/common';
 
-import { AuthModule } from '../auth';
 import { CorrelationIdMiddleware } from './middlewares';
 import { getServeStaticModule } from './web';
+import { AuthModule } from '../auth';
+import { AgentModule } from '../agent';
 
 @Module({
   imports: [
     getServeStaticModule(),
-    AuthModule
+    AuthModule,
+    AgentModule,
   ],
 })
 export class AppModule implements NestModule {

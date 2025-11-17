@@ -18,11 +18,14 @@
 @import './auth/components/_SignInForm';
 @import './auth/pages/_SignInPage';
 
+@import './chat/parts/_common';
+@import './chat/parts/_UserInputChatPart';
+@import './chat/parts/_ModelOutputChatPart';
+@import './chat/parts/_ModelErrorChatPart';
+
 @import './chat/components/_common';
 @import './chat/components/_ChatInput';
 @import './chat/components/_ChatOutput';
 @import './chat/components/_Chat';
-@import './chat/parts/_common';
-@import './chat/parts/_UserInputChatPart';
-@import './chat/parts/_ModelOutputChatPart';
 @import './chat/pages/_ChatPage';
+

@@ -16,7 +16,8 @@
       "@ai-job-search/log": ["./src/log"],
       "@ai-job-search/gateway": ["./src/gateway"],
 
-      "@ai-job-search/auth-api": ["./src/auth/api"]
+      "@ai-job-search/auth-api": ["./src/auth/api"],
+      "@ai-job-search/agent-api": ["./src/agent/api"]
     }
   },
   "exclude": ["node_modules", "dist"]

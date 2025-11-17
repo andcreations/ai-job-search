@@ -1,32 +1,59 @@
 import { Service } from '@andcreations/common';
+import { AgentAPI } from '@ai-job-search/agent-api';
 
 @Service()
 export class ChatService {
-  private chatCompletionContent: string = '';
-  private chatCompletionStream: ChatCompletionStream | null = null;
+  private streamAbortController: AbortController | null = null;
+  private streamCancelled: boolean = false;
 
-  public async createChatCompletion(
+  public async streamChatCompletion(
     input: CreateChatCompletionInput,
-    stream: ChatCompletionStream,
+    stream: ChatCompletionStream,    
   ): Promise<void> {
-    this.chatCompletionContent = '';
-    this.chatCompletionStream = stream;
-
-    const words = TEXT.split(' ').map(word => word + ' ');
-    while (words.length > 0) {
-      const count = 1 + Math.round(Math.random() * 2);
-      const chunk = words.splice(0, count).join(' ');
-      this.chatCompletionContent += chunk;
-      this.chatCompletionStream?.onModelTextChunk(chunk);
-      const delay = Math.random() * 100 + 200;
-      await new Promise(resolve => setTimeout(resolve, delay));
+    this.streamAbortController = new AbortController();
+    this.streamCancelled = false;
+    
+    const response = await fetch(
+      AgentAPI.url.createChatCompletion(),
+      { 
+        signal: this.streamAbortController.signal,
+        method: 'POST',
+        body: JSON.stringify({ userInput: input.userInput })
+      },
+    );
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
-    this.chatCompletionStream?.onFinish();
+
+    try {
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder('utf-8');
+      
+      while (true) {
+        const { value, done } = await reader.read();
+        if (done || this.streamCancelled) break;
+
+        const chunk = decoder.decode(value, { stream: true });
+        stream.onModelTextChunk(chunk);
+      }
+      stream.onFinish();
+    } catch (error) {
+      if (error instanceof Error) { 
+        stream.onError(error);
+      } else {
+        stream.onError(new Error('Unknown error'));
+      }
+    }
+    finally {
+      this.streamAbortController = null;
+      this.streamCancelled = false;
+    }
   }
 
-  public streamChatCompletion(stream: ChatCompletionStream): void {
-    if (this.chatCompletionContent.length > 0) {
-      stream.onModelTextChunk(this.chatCompletionContent);
+  public async cancelChatCompletionStream(): Promise<void> {
+    if (this.streamAbortController) {
+      this.streamCancelled = true;
+      this.streamAbortController.abort();
     }
   }
 }
@@ -38,6 +65,5 @@ export interface CreateChatCompletionInput {
 export interface ChatCompletionStream {
   onModelTextChunk: (chunk: string) => void;
   onFinish: () => void;
+  onError: (error: Error) => void;
 }
-
-const TEXT = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'

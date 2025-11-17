@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useRef } from 'react';
+import classNames from 'classnames';
 import Form from 'react-bootstrap/Form';
 
 import { isEnterKey } from '../../utils';
@@ -31,8 +32,13 @@ export function ChatInput(props: ChatInputProps) {
     }
   };
 
+  const chatInputClassName = classNames(
+    'aijs-chat-input',
+    { 'aijs-chat-input-without-output': !props.hasChatParts },
+  );
+
   return (
-    <div className='aijs-chat-input'>
+    <div className={chatInputClassName}>
       { props.hasChatParts &&
         <div className='aijs-chat-input-border'/>
       }

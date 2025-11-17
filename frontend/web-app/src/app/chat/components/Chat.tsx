@@ -1,11 +1,17 @@
 import * as React from 'react';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
-import { usePatchState, useService } from '../../hooks';
-import { ChatPart, ModelOutputChatPart, UserInputChatPart } from '../parts';
+import { usePatchState, useService, useTranslations } from '../../hooks';
+import {
+  ChatPart,
+  ModelErrorChatPart,
+  ModelOutputChatPart,
+  UserInputChatPart,
+} from '../parts';
 import { ChatOutput } from './ChatOutput';
 import { ChatInput } from './ChatInput';
 import { ChatService } from '../services';
+import { ChatTranslations } from './Chat.translations';
 
 interface ChatState {
   userInput: string;
@@ -16,104 +22,41 @@ interface ChatState {
 
 export function Chat() {
   const chatService = useService(ChatService);
+  const translate = useTranslations(ChatTranslations);
   const [state, setState] = React.useState<ChatState>({
     userInput: '',
     modelOutput: '',
     streaming: false,
-    chatParts: [
-      new UserInputChatPart('Tell me a joke'),
-      new ModelOutputChatPart(
-        'Why did the chicken cross the road? To get to the other side.' +
-        'Why did the chicken cross the road? To get to the other side.' +
-        'Why did the chicken cross the road? To get to the other side.' +
-        'Why did the chicken cross the road? To get to the other side.' +
-        'Why did the chicken cross the road? To get to the other side.'
-      ),
-      new UserInputChatPart('Tell me a joke'),
-      new ModelOutputChatPart(
-        'Why did the chicken cross the road? To get to the other side.' +
-        'Why did the chicken cross the road? To get to the other side.' +
-        'Why did the chicken cross the road? To get to the other side.' +
-        'Why did the chicken cross the road? To get to the other side.' +
-        'Why did the chicken cross the road? To get to the other side.'
-      ),
-      new UserInputChatPart('Tell me a joke'),
-      new ModelOutputChatPart(
-        'Why did the chicken cross the road? To get to the other side.' +
-        'Why did the chicken cross the road? To get to the other side.' +
-        'Why did the chicken cross the road? To get to the other side.' +
-        'Why did the chicken cross the road? To get to the other side.' +
-        'Why did the chicken cross the road? To get to the other side.'
-      ),
-      new UserInputChatPart('Tell me a joke'),
-      new ModelOutputChatPart(
-        'Why did the chicken cross the road? To get to the other side.' +
-        'Why did the chicken cross the road? To get to the other side.' +
-        'Why did the chicken cross the road? To get to the other side.' +
-        'Why did the chicken cross the road? To get to the other side.' +
-        'Why did the chicken cross the road? To get to the other side.'
-      ),
-      new UserInputChatPart('Tell me a joke'),
-      new ModelOutputChatPart(
-        'Why did the chicken cross the road? To get to the other side.' +
-        'Why did the chicken cross the road? To get to the other side.' +
-        'Why did the chicken cross the road? To get to the other side.' +
-        'Why did the chicken cross the road? To get to the other side.' +
-        'Why did the chicken cross the road? To get to the other side.'
-      ),
-      new UserInputChatPart('Tell me a joke'),
-      new ModelOutputChatPart(
-        'Why did the chicken cross the road? To get to the other side.' +
-        'Why did the chicken cross the road? To get to the other side.' +
-        'Why did the chicken cross the road? To get to the other side.' +
-        'Why did the chicken cross the road? To get to the other side.' +
-        'Why did the chicken cross the road? To get to the other side.'
-      ),
-      new UserInputChatPart('Tell me a joke'),
-      new ModelOutputChatPart(
-        'Why did the chicken cross the road? To get to the other side.' +
-        'Why did the chicken cross the road? To get to the other side.' +
-        'Why did the chicken cross the road? To get to the other side.' +
-        'Why did the chicken cross the road? To get to the other side.' +
-        'Why did the chicken cross the road? To get to the other side.'
-      ),
-      new UserInputChatPart('Tell me a joke'),
-      new ModelOutputChatPart(
-        'Why did the chicken cross the road? To get to the other side.' +
-        'Why did the chicken cross the road? To get to the other side.' +
-        'Why did the chicken cross the road? To get to the other side.' +
-        'Why did the chicken cross the road? To get to the other side.' +
-        'Why did the chicken cross the road? To get to the other side.'
-      ),
-      new UserInputChatPart('Tell me a joke'),
-      new ModelOutputChatPart(
-        'Why did the chicken cross the road? To get to the other side.' +
-        'Why did the chicken cross the road? To get to the other side.' +
-        'Why did the chicken cross the road? To get to the other side.' +
-        'Why did the chicken cross the road? To get to the other side.' +
-        'Why did the chicken cross the road? To get to the other side.'
-      ),
-      new UserInputChatPart('Tell me a joke'),
-      new ModelOutputChatPart(
-        'Why did the chicken cross the road? To get to the other side.' +
-        'Why did the chicken cross the road? To get to the other side.' +
-        'Why did the chicken cross the road? To get to the other side.' +
-        'Why did the chicken cross the road? To get to the other side.' +
-        'Why did the chicken cross the road? To get to the other side.'
-      ),
-    ],
+    chatParts: [],
   });
   const patchState = usePatchState(setState);
+  const autoScroll = useRef(false);
 
-  const scrollToBottom = () => {
-    const chatOutput = document.getElementById('aijs-chat-output-container');
-    if (chatOutput) {
-      const diff = chatOutput.scrollHeight - chatOutput.scrollTop;
-      chatOutput.scrollTo({
-        top: chatOutput.scrollHeight,
+  useEffect(() => {
+    return () => {
+      chatService.cancelChatCompletionStream();
+    };
+  }, []);
+
+  const doScrollToBottom = () => {
+    const el = document.getElementById('aijs-chat-output-container');
+    if (!el) {
+      return;
+    }
+
+    // iOS Safari sometimes throws on smooth scroll
+    const supportsSmooth = 'scrollBehavior' in document.documentElement.style;    
+    if (supportsSmooth) {
+      el.scrollTo({
+        top: el.scrollHeight,
         behavior: 'smooth',
       });
+    } else {
+      el.scrollTo(0, el.scrollHeight);
     }
+  };
+  const scrollToBottom = () => {
+    setTimeout(() => { doScrollToBottom(); }, 0);
   };
 
   const addChatParts = (
@@ -136,7 +79,23 @@ export function Chat() {
       return;
     }
 
+    const handleError = (error: Error) => {
+      addChatParts(
+        [
+          new ModelErrorChatPart(translate('error-occurred'))
+        ],
+        {
+          streaming: false,
+        }
+      );
+      autoScroll.current = false;
+    };
+
+    // scroll to the bottom prior to starting the streaming
     scrollToBottom();
+    autoScroll.current = true;
+
+    // add the user input part
     addChatParts(
       [
         new UserInputChatPart(state.userInput),
@@ -148,7 +107,9 @@ export function Chat() {
         streaming: true,
       }
     );
-    chatService.createChatCompletion(
+
+    // start the streaming
+    chatService.streamChatCompletion(
       { userInput: state.userInput },
       {
         onModelTextChunk: (chunk: string) => {
@@ -163,24 +124,31 @@ export function Chat() {
               ],
             }
           });
-          scrollToBottom();
+          if (autoScroll.current) {
+            scrollToBottom();
+          }
         },
         onFinish: () => {
           patchState({ streaming: false });
+          autoScroll.current = false;
         },
+        onError: (error: Error) => handleError(error),
       }
     )
     .catch(error => {
-      // TODO Handle error
-      console.error(error);
-      patchState({ streaming: false });
+      handleError(error);
     });
   };
 
   return (
     <div className='aijs-chat'>
       { state.chatParts.length > 0 &&
-        <ChatOutput chatParts={state.chatParts}/>
+        <ChatOutput
+          chatParts={state.chatParts}
+          onScrollUp={() => {
+            autoScroll.current = false;
+          }}
+        />
       }
       <ChatInput
         text={state.userInput}

@@ -12,6 +12,9 @@
       "@ai-job-search/auth-api": [
         "../../backend/backend-server/src/auth/api"
       ],
+      "@ai-job-search/agent-api": [
+        "../../backend/backend-server/src/agent/api"
+      ]
     }
   }
 }

@@ -3,9 +3,23 @@ import { ChatPart } from '../parts';
 
 export interface ChatOutputProps {
   chatParts: ChatPart<unknown>[];
+  onScrollDown?: () => void;
+  onScrollUp?: (delta: number) => void;
 }
 
 export function ChatOutput(props: ChatOutputProps) {
+  const lastScrollTop = React.useRef(0);
+
+  const onScroll = (event: React.UIEvent<HTMLDivElement>) => {
+    const scrollTop = event.currentTarget.scrollTop;
+    if (scrollTop > lastScrollTop.current) {
+      props.onScrollDown?.();
+    }
+    if (scrollTop < lastScrollTop.current) {
+      props.onScrollUp?.(lastScrollTop.current - scrollTop);
+    }
+    lastScrollTop.current = scrollTop;
+  };
 
   const renderChatParts = () => {
     return props.chatParts.map((chatPart, index) => {
@@ -18,6 +32,7 @@ export function ChatOutput(props: ChatOutputProps) {
     <div 
       id='aijs-chat-output-container'
       className='aijs-chat-output-container aijs-scroll'
+      onScroll={onScroll}
     >
       <div className='aijs-chat-output'>
         { renderChatParts() }

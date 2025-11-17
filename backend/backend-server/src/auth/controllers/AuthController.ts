@@ -16,13 +16,13 @@ import {
   InjectContext,
   InjectUser,
 } from '@ai-job-search/gateway';
-import { ACCESS_TOKEN_COOKIE_NAME } from '@ai-job-search/auth-api';
+import { ACCESS_TOKEN_COOKIE_NAME, AuthAPI } from '@ai-job-search/auth-api';
 
 import { ACCESS_TOKEN_COOKIE_MAX_AGE } from '../consts';
 import { AuthMeGWResponseImpl, LoginGWRequestImpl } from '../dtos';
 import { AuthService } from '../services';
 
-@Controller('api/auth')
+@Controller(AuthAPI.URL)
 export class AuthController {
   public constructor(private readonly authService: AuthService) {
   }

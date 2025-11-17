@@ -20,6 +20,10 @@ module.exports = {
         '@ai-job-search/auth-api',
         'auth/api',
       ),
+      ...backendAlias(
+        '@ai-job-search/agent-api',
+        'agent/api',
+      ),
     },
     fallback: {
       crypto: false, // provided by browser
