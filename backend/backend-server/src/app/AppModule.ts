@@ -11,6 +11,7 @@ import { getServeStaticModule } from './web';
 import { UsersDBModule } from '../users/db';
 import { AuthModule } from '../auth';
 import { AgentModule } from '../agent';
+import { ThreadsModule } from '../threads';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { AgentModule } from '../agent';
     UsersDBModule,
     AuthModule,
     AgentModule,
+    ThreadsModule,
   ],
 })
 export class AppModule implements NestModule {

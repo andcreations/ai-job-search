@@ -1,0 +1,1 @@
+export const THREADS_DB_NAME = 'threads';

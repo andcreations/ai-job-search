@@ -19,7 +19,9 @@
 
       "@ai-job-search/users-db": ["./src/users/db"],
       "@ai-job-search/auth-api": ["./src/auth/api"],
-      "@ai-job-search/agent-api": ["./src/agent/api"]
+      "@ai-job-search/agent-api": ["./src/agent/api"],
+      "@ai-job-search/threads-db": ["./src/threads/db"],
+      "@ai-job-search/threads-api": ["./src/threads/api"]
     }
   },
   "exclude": ["node_modules", "dist"]
