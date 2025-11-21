@@ -9,7 +9,8 @@ exports.up = (knex) => {
     return knex.raw(`
       CREATE INDEX idx_users_username ON users (username);
     `)
-  })}
+  });
+}
 
 exports.down = (knex) => {
   return knex.raw(

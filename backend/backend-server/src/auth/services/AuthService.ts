@@ -45,8 +45,7 @@ export class AuthService {
     const issuedAt = this.toSeconds(Date.now());
     const payload: JwtPayload = {
       user: {
-        // yes, the identifier is the same as the username
-        id: request.username,
+        id: user.id,
       },
       iat: issuedAt,
       exp: issuedAt + this.toSeconds(ACCESS_TOKEN_COOKIE_MAX_AGE),

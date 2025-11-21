@@ -1,3 +1,3 @@
-import { UserEntity } from '../entities';
+import { UserEntityWithoutTimestamps } from '../entities';
 
-export type CreateUserEntity = Omit<UserEntity, 'id'>;
+export type CreateUserEntity = Omit<UserEntityWithoutTimestamps, 'id'>;
