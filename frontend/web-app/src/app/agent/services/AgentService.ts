@@ -2,7 +2,7 @@ import { Service } from '@andcreations/common';
 import { AgentAPI } from '@ai-job-search/agent-api';
 
 @Service()
-export class ChatService {
+export class AgentService {
   private streamAbortController: AbortController | null = null;
   private streamCancelled: boolean = false;
 

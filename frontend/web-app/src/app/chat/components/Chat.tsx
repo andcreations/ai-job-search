@@ -2,6 +2,7 @@ import * as React from 'react';
 import { useEffect, useRef } from 'react';
 
 import { usePatchState, useService, useTranslations } from '../../hooks';
+import { AgentService } from '../../agent';
 import {
   ChatPart,
   ModelErrorChatPart,
@@ -10,7 +11,6 @@ import {
 } from '../parts';
 import { ChatOutput } from './ChatOutput';
 import { ChatInput } from './ChatInput';
-import { ChatService } from '../services';
 import { ChatTranslations } from './Chat.translations';
 
 interface ChatState {
@@ -21,7 +21,7 @@ interface ChatState {
 }
 
 export function Chat() {
-  const chatService = useService(ChatService);
+  const agentService = useService(AgentService);
   const translate = useTranslations(ChatTranslations);
   const [state, setState] = React.useState<ChatState>({
     userInput: '',
@@ -34,7 +34,7 @@ export function Chat() {
 
   useEffect(() => {
     return () => {
-      chatService.cancelChatCompletionStream();
+      agentService.cancelChatCompletionStream();
     };
   }, []);
 
@@ -109,7 +109,7 @@ export function Chat() {
     );
 
     // start the streaming
-    chatService.streamChatCompletion(
+    agentService.streamChatCompletion(
       { userInput: state.userInput },
       {
         onModelTextChunk: (chunk: string) => {
