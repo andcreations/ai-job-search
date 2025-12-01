@@ -12,6 +12,7 @@ import { UsersDBModule } from '../users/db';
 import { AuthModule } from '../auth';
 import { AgentModule } from '../agent';
 import { ThreadsModule } from '../threads';
+import { ThreadsCompletionModule } from '../threads-completion';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { ThreadsModule } from '../threads';
     AuthModule,
     AgentModule,
     ThreadsModule,
+    ThreadsCompletionModule,
   ],
 })
 export class AppModule implements NestModule {

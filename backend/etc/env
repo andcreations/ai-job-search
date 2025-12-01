@@ -11,5 +11,9 @@ fi
 SCRIPT_DIR="$(dirname "$SCRIPT_PATH")"
 
 export JWT_SECRET="owRz8QogIYkN79Sw6WpTqJ@a"
-export AI_JOB_SEARCH_WEB_APP_DIR="$SCRIPT_DIR/../../frontend/web-app/dist/app"
+export SYSTEM_ADMIN_TOKEN="t&tuf9F4oKi!Dtf#"
+
 export SQLITE_DB_DIR="$SCRIPT_DIR/../_db"
+export AI_JOB_SEARCH_WEB_APP_DIR="$SCRIPT_DIR/../../frontend/web-app/dist/app"
+
+export DEFAULT_THREAD_CFG_NAME="default"

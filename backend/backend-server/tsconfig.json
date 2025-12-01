@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "es2020",
-    "module": "commonjs",
+    "module": "Node16",
     "declaration": true,
     "removeComments": true,
     "emitDecoratorMetadata": true,
@@ -10,6 +10,7 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "incremental": true,
+    "skipLibCheck": true,
     "paths": {
       "@ai-job-search/common": ["./src/common"],
       "@ai-job-search/core": ["./src/core"],
@@ -20,8 +21,11 @@
       "@ai-job-search/users-db": ["./src/users/db"],
       "@ai-job-search/auth-api": ["./src/auth/api"],
       "@ai-job-search/agent-api": ["./src/agent/api"],
+      "@ai-job-search/agent": ["./src/agent"],
       "@ai-job-search/threads-db": ["./src/threads/db"],
-      "@ai-job-search/threads-api": ["./src/threads/api"]
+      "@ai-job-search/threads-api": ["./src/threads/api"],
+      "@ai-job-search/threads-completion-api": ["./src/threads-completion/api"],
+      "@ai-job-search/threads": ["./src/threads"],
     }
   },
   "exclude": ["node_modules", "dist"]

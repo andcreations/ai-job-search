@@ -3,12 +3,11 @@ import {
   ExpressAdapter,
   NestExpressApplication,
 } from '@nestjs/platform-express';
-import * as cookieParser from 'cookie-parser';
 import { getIntEnv } from '@ai-job-search/common';
 
 import { BOOTSTRAP_CONTEXT } from './core';
 import { getLogger } from './log';
-import { AppModule } from './app';
+import { AppCfg, AppModule } from './app';
 
 async function bootstrap() {
   // create application
@@ -18,10 +17,9 @@ async function bootstrap() {
       new ExpressAdapter(),
       {}
     );
-  app.use(cookieParser());
 
-  // configure
-  app.enableShutdownHooks();
+  // bootstrap
+  AppCfg.configure(app);
 
   // listen
   const port = getIntEnv('HTTP_PORT', 8080);

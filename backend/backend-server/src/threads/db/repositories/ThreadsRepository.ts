@@ -4,6 +4,7 @@ import { Knex } from 'knex';
 import { THREADS_DB_CONNECTION } from '../consts';
 import { 
   THREADS_TABLE_NAME,
+  ThreadEntity,
   ThreadEntityWithoutTimestamps,
 } from '../entities';
 
@@ -17,5 +18,11 @@ export class ThreadsRepository {
     thread: ThreadEntityWithoutTimestamps,
   ): Promise<void> {
     await this.db(THREADS_TABLE_NAME).insert(thread);
+  }
+
+  public async readThread(
+    threadId: string,
+  ): Promise<ThreadEntity> {
+    return await this.db(THREADS_TABLE_NAME).where('id', threadId).first();
   }
 }

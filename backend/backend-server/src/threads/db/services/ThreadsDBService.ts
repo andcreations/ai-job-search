@@ -22,4 +22,10 @@ export class ThreadsDBService {
     });
     return { id };
   }
+
+  public async readThread(
+    threadId: string,
+  ): Promise<ThreadEntity> {
+    return await this.threadsRepository.readThread(threadId);
+  }
 }
