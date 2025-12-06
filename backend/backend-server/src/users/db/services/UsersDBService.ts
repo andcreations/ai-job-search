@@ -1,4 +1,4 @@
-import { IdGenerator, InjectIdGenerator } from '@ai-job-search/common';
+import { type IdGenerator, InjectIdGenerator } from '@ai-job-search/common';
 
 import { UserEntity } from '../entities';
 import { UsersRepository } from '../repositories';

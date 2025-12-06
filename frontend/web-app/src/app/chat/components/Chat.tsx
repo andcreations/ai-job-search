@@ -1,8 +1,14 @@
 import * as React from 'react';
 import { useEffect, useRef } from 'react';
+import { 
+  MODEL_MESSAGE_STREAM_CHUNK_TYPE,
+  ModelMessageStreamChunk,
+  StreamChunk,
+} from '@ai-job-search/threads-completion-api';
 
+import { Log } from '../../log';
 import { usePatchState, useService, useTranslations } from '../../hooks';
-import { AgentService } from '../../agent';
+import { ThreadsCompletionService } from '../../threads-completion';
 import {
   ChatPart,
   ModelErrorChatPart,
@@ -21,7 +27,7 @@ interface ChatState {
 }
 
 export function Chat() {
-  const agentService = useService(AgentService);
+  const threadsCompletionService = useService(ThreadsCompletionService);
   const translate = useTranslations(ChatTranslations);
   const [state, setState] = React.useState<ChatState>({
     userInput: '',
@@ -34,7 +40,7 @@ export function Chat() {
 
   useEffect(() => {
     return () => {
-      agentService.cancelChatCompletionStream();
+      threadsCompletionService.cancelChatCompletionStream();
     };
   }, []);
 
@@ -80,6 +86,7 @@ export function Chat() {
     }
 
     const handleError = (error: Error) => {
+      Log.error('Error streaming chat completion', error);
       addChatParts(
         [
           new ModelErrorChatPart(translate('error-occurred'))
@@ -108,25 +115,34 @@ export function Chat() {
       }
     );
 
-    // start the streaming
-    agentService.streamChatCompletion(
-      { userInput: state.userInput },
-      {
-        onModelTextChunk: (chunk: string) => {
-          setState(prevState => {
-            const modelOutput = prevState.modelOutput + chunk;
-            return {
-              ...prevState,
-              modelOutput,
-              chatParts: [
-                ...prevState.chatParts.slice(0, -1),
-                new ModelOutputChatPart(modelOutput),
-              ],
-            }
-          });
-          if (autoScroll.current) {
-            scrollToBottom();
+    const handleStreamChunk = (chunk: StreamChunk<unknown>) => {
+      if (chunk.type === MODEL_MESSAGE_STREAM_CHUNK_TYPE) {
+        const modelMessageChunk = chunk as ModelMessageStreamChunk;
+        setState(prevState => {
+          const modelOutput =
+            prevState.modelOutput + modelMessageChunk.data.content;
+          return {
+            ...prevState,
+            modelOutput,
+            chatParts: [
+              ...prevState.chatParts.slice(0, -1),
+              new ModelOutputChatPart(modelOutput),
+            ],
           }
+        });
+        if (autoScroll.current) {
+          scrollToBottom();
+        } 
+      }
+    };
+
+    // start the streaming
+    threadsCompletionService.streamChatCompletion(
+      { userMessage: state.userInput },
+      {
+        onStreamChunk: (chunk: StreamChunk<unknown>) => {
+          handleStreamChunk(chunk);
+      
         },
         onFinish: () => {
           patchState({ streaming: false });

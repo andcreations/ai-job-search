@@ -24,6 +24,14 @@ module.exports = {
         '@ai-job-search/agent-api',
         'agent/api',
       ),
+      ...backendAlias(
+        '@ai-job-search/threads-api',
+        'threads/api',
+      ),
+      ...backendAlias(
+        '@ai-job-search/threads-completion-api',
+        'threads-completion/api',
+      ),
     },
     fallback: {
       crypto: false, // provided by browser

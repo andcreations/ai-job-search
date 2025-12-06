@@ -18,6 +18,10 @@ export class AIJobSearchError extends Error {
   public getHTTPStatus(): number {
     return this.httpStatus;
   }
+  
+  public toString(): string {
+    return this.msg;
+  }
 
   public static quote(value: string | string[]): string {
     if (Array.isArray(value)) {

@@ -5,12 +5,14 @@ import { LocationService } from '@andcreations/web-common';
 
 import { AppRouter, PathTo } from './routing';
 import { AuthService } from './auth';
+import { ThreadsService } from './threads';
 
 function failedToRunApp(error: any): void {
   console.log('Failed to run the application', error);
 }
 
 async function bootstrapServices(): Promise<void> {
+  IoC.resolve(ThreadsService);
   IoC.bootstrap();
 }
 

@@ -1,5 +1,5 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
-import * as sqlite3 from 'sqlite3';
+import Database from 'better-sqlite3';
 import { BaseCheckpointSaver } from '@langchain/langgraph-checkpoint';
 import { SqliteSaver } from '@langchain/langgraph-checkpoint-sqlite';
 import { BOOTSTRAP_CONTEXT } from '@ai-job-search/core';
@@ -34,7 +34,7 @@ export class SQLiteCheckpointSaverProvider
     );
 
     // create database
-    const db = new sqlite3.Database(this.dbPath);
+    const db = new Database(this.dbPath);
 
     // create checkpoint saver
     return new SqliteSaver(db);

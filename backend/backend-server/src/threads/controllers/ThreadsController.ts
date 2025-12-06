@@ -1,5 +1,5 @@
 import { Body, Controller, Post } from '@nestjs/common';
-import { Auth, AuthUser, InjectUser } from '@ai-job-search/gateway';
+import { Auth, type AuthUser, InjectUser } from '@ai-job-search/gateway';
 import { ThreadsAPI } from '@ai-job-search/threads-api';
 
 import { CreateThreadGWRequestImpl, CreateThreadGWResponseImpl } from '../dtos';

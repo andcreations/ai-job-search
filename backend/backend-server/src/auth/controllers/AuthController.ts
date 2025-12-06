@@ -9,10 +9,10 @@ import {
   Res,
 } from '@nestjs/common';
 import { Response } from 'express';
-import { Context } from '@ai-job-search/core';
+import { type Context } from '@ai-job-search/core';
 import {
   Auth,
-  AuthUser,
+  type AuthUser,
   InjectContext,
   InjectUser,
 } from '@ai-job-search/gateway';

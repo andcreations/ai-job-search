@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { IdGenerator, InjectIdGenerator } from '@ai-job-search/common';
+import { type IdGenerator, InjectIdGenerator } from '@ai-job-search/common';
 
 import { ThreadCfg } from '../../types';
 import { ThreadCfgNotFoundError } from '../errors';

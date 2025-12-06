@@ -1,22 +1,26 @@
-import { BaseLanguageModel } from '@langchain/core/language_models/base';
 import {
   AIMessage,
+  AIMessageChunk,
   HumanMessage,
   ReactAgent,
   ToolMessage,
   createAgent,
 } from 'langchain';
+import { BaseLanguageModel } from '@langchain/core/language_models/base';
 
 import {
   Agent,
   AgentCfg,
   AgentInvokeInput,
   AgentInvokeOutput,
+  AgentStreamCallbacks,
   AgentStreamInput,
   Message,
 } from '../../types';
 import {
+  MODEL_CHUNK_MESSAGE_TYPE,
   MODEL_MESSAGE_TYPE,
+  ModelChunkMessage,
   ModelMessage,
   USER_MESSAGE_TYPE,
   UserMessage,
@@ -45,7 +49,7 @@ export abstract class LangChainAgent extends Agent {
     this.agent = createAgent({
       model,
       tools: [], // TODO Add tools.
-      checkpointer: await this.langChainCheckpointSaver.getCheckpointSaver(),
+      checkpointer: this.langChainCheckpointSaver.getCheckpointSaver(),
     });
   }
 
@@ -104,6 +108,53 @@ export abstract class LangChainAgent extends Agent {
     return { messages };
   }
 
-  public async stream(input: AgentStreamInput): Promise<void> {
+  public async stream(
+    input: AgentStreamInput,
+    callbacks: AgentStreamCallbacks,
+  ): Promise<void> {
+    const events = await this.agent.streamEvents(
+      {
+        messages: [
+          {
+            role: 'user',
+            content: input.userMessage
+          }
+        ],
+      },
+      {
+        version: 'v2',
+        configurable: {
+          thread_id: input.threadId,
+        },
+      }
+    );
+
+    for await (const item of events) {
+      const { event, data } = item;
+
+      if (event === 'on_chat_model_start') {
+      }
+
+      if (event === 'on_chat_model_stream') {
+        const { chunk } = data;
+        if (chunk && chunk instanceof AIMessageChunk) {
+          const text = chunk.content?.toString() ?? '';
+          if (text?.length) {
+            // message chunk
+            const chunkMessage: ModelChunkMessage = {
+              id: chunk.id,
+              type: MODEL_CHUNK_MESSAGE_TYPE,
+              data: {
+                content: text,
+              },
+            };
+            await callbacks.onModelChunk(chunkMessage);
+          }
+        }
+      }
+
+      if (event === 'on_chat_model_end') {
+      }
+    }
   }
 }

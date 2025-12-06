@@ -1,23 +1,39 @@
 import { Service } from '@andcreations/common';
-import { ThreadsCompletionAPI } from '@ai-job-search/threads-completion-api';
+import { 
+  ThreadsCompletionAPI,
+  StreamChunk,
+  StreamAccumulator,
+} from '@ai-job-search/threads-completion-api';
 
 import { ThreadsService } from '../../threads';
 
 @Service()
-export class AgentService {
+export class ThreadsCompletionService {
   private streamAbortController: AbortController | null = null;
   private streamCancelled: boolean = false;
 
   public constructor(private readonly threadsService: ThreadsService) {
   }
-
+  
   public async streamChatCompletion(
-    input: CreateChatCompletionInput,
-    stream: ChatCompletionStream,    
+    input: StreamChatCompletionInput,
+    callbacks: ChatCompletionCallbacks,    
   ): Promise<void> {
     this.streamAbortController = new AbortController();
     this.streamCancelled = false;
-    
+
+    const accumulator = new StreamAccumulator({
+      onStreamChunk: (chunk) => {
+        callbacks.onStreamChunk(chunk);
+      },
+      onFinish: () => {
+        callbacks.onFinish();
+      },
+      onError: (error) => {
+        callbacks.onError(error);
+      },
+    });
+
     const response = await fetch(
       ThreadsCompletionAPI.url.streamThreadCompletion(),
       { 
@@ -46,14 +62,15 @@ export class AgentService {
         if (done || this.streamCancelled) break;
 
         const chunk = decoder.decode(value, { stream: true });
-        stream.onModelTextChunk(chunk);
+        // callbacks.onModelTextChunk(chunk);
+        accumulator.append(chunk);
       }
-      stream.onFinish();
+      accumulator.finish();
     } catch (error) {
       if (error instanceof Error) { 
-        stream.onError(error);
+        callbacks.onError(error);
       } else {
-        stream.onError(new Error('Unknown error'));
+        callbacks.onError(new Error('Unknown error'));
       }
     }
     finally {
@@ -67,15 +84,15 @@ export class AgentService {
       this.streamCancelled = true;
       this.streamAbortController.abort();
     }
-  }
+  }  
 }
 
-export interface CreateChatCompletionInput {
+export interface StreamChatCompletionInput {
   userMessage: string;
 }
 
-export interface ChatCompletionStream {
-  onModelTextChunk: (chunk: string) => void;
+export interface ChatCompletionCallbacks {
+  onStreamChunk: (chunk: StreamChunk<unknown>) => void;
   onFinish: () => void;
   onError: (error: Error) => void;
 }
