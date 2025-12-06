@@ -10,7 +10,7 @@ export class SQLiteProviderFactory {
 
     const dbFilePath = SQLiteUtils.getSQLiteDBFilePath(dbName);
     const migrationsDir = SQLiteUtils.getSQLiteMigrationsDir(dbName);
-    getLogger().info('Database directories', {
+    getLogger().info('Initializing SQLite database', {
       ...context,
       dbName,
       dbFilePath,

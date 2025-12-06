@@ -1,10 +1,15 @@
 import { Service } from '@andcreations/common';
-import { AgentAPI } from '@ai-job-search/agent-api';
+import { ThreadsCompletionAPI } from '@ai-job-search/threads-completion-api';
+
+import { ThreadsService } from '../../threads';
 
 @Service()
 export class AgentService {
   private streamAbortController: AbortController | null = null;
   private streamCancelled: boolean = false;
+
+  public constructor(private readonly threadsService: ThreadsService) {
+  }
 
   public async streamChatCompletion(
     input: CreateChatCompletionInput,
@@ -14,11 +19,18 @@ export class AgentService {
     this.streamCancelled = false;
     
     const response = await fetch(
-      AgentAPI.url.createChatCompletion(),
+      ThreadsCompletionAPI.url.streamThreadCompletion(),
       { 
         signal: this.streamAbortController.signal,
         method: 'POST',
-        body: JSON.stringify({ userInput: input.userInput })
+        body: JSON.stringify({
+          threadId: this.threadsService.getThreadId(),
+          userMessage: input.userMessage,
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'text/plain',
+        },
       },
     );
     if (!response.ok) {
@@ -59,7 +71,7 @@ export class AgentService {
 }
 
 export interface CreateChatCompletionInput {
-  userInput: string;
+  userMessage: string;
 }
 
 export interface ChatCompletionStream {

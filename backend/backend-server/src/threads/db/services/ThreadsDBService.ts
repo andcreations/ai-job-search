@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { IdGenerator, InjectIdGenerator } from '@ai-job-search/common';
+import { type IdGenerator, InjectIdGenerator } from '@ai-job-search/common';
 
 import { ThreadsRepository } from '../repositories'; 
 import { CreateThreadEntity } from '../types';
@@ -21,5 +21,11 @@ export class ThreadsDBService {
       id,
     });
     return { id };
+  }
+
+  public async readThread(
+    threadId: string,
+  ): Promise<ThreadEntity> {
+    return await this.threadsRepository.readThread(threadId);
   }
 }

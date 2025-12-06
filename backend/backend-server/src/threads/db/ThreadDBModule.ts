@@ -3,8 +3,8 @@ import { IdGeneratorProvider } from '@ai-job-search/common';
 import { SQLiteProviderFactory } from '@ai-job-search/sqlite';
 
 import { THREADS_DB_CONNECTION, THREADS_DB_NAME } from './consts';
-import { ThreadsRepository } from './repositories';
-import { ThreadsDBService } from './services';
+import { ThreadsCfgRepository, ThreadsRepository } from './repositories';
+import { ThreadsCfgDBService, ThreadsDBService } from './services';
 
 @Module({
   providers: [
@@ -13,10 +13,12 @@ import { ThreadsDBService } from './services';
       useFactory: () => SQLiteProviderFactory.create(THREADS_DB_NAME),
     },
     IdGeneratorProvider,
+    ThreadsCfgRepository,
+    ThreadsCfgDBService,
     ThreadsRepository,
     ThreadsDBService,
   ],
-  exports: [ThreadsDBService],
+  exports: [ThreadsCfgDBService, ThreadsDBService],
 })
 export class ThreadDBModule {
 }

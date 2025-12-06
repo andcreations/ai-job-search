@@ -3,6 +3,7 @@ export const THREADS_TABLE_NAME = 'threads';
 export class ThreadEntity {
   public id: string;
   public user_id: string;
+  public thread_cfg: Buffer;
   public created_at: Date;
   public updated_at: Date;
 }

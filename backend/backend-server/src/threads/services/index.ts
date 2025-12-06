@@ -1,2 +1,3 @@
-export * from './ThreadMapper';
+export * from './ThreadsCfgService';
+export * from './ThreadsMapper';
 export * from './ThreadsService';

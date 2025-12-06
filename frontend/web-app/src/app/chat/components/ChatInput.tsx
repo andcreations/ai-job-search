@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { useRef } from 'react';
+import { useRef, useEffect } from 'react';
 import classNames from 'classnames';
 import Form from 'react-bootstrap/Form';
 
-import { isEnterKey } from '../../utils';
+import { focusRef, isEnterKey } from '../../utils';
 import { useTranslations } from '../../hooks';
 import { ChatInputTranslations } from './ChatInput.translations';
 
@@ -18,6 +18,10 @@ export function ChatInput(props: ChatInputProps) {
   const translate = useTranslations(ChatInputTranslations);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  useEffect(() => {
+    focusRef(inputRef);
+  }, []);
+
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     props.onTextChange(event.target.value);
   };
@@ -25,9 +29,6 @@ export function ChatInput(props: ChatInputProps) {
   const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (isEnterKey(event)) {
       event.preventDefault();
-      if (inputRef.current) {
-        inputRef.current.blur();
-      }
       props.onTextEnter();
     }
   };

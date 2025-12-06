@@ -14,6 +14,12 @@
       ],
       "@ai-job-search/agent-api": [
         "../../backend/backend-server/src/agent/api"
+      ],
+      "@ai-job-search/threads-api": [
+        "../../backend/backend-server/src/threads/api"
+      ],
+      "@ai-job-search/threads-completion-api": [
+        "../../backend/backend-server/src/threads-completion/api"
       ]
     }
   }
